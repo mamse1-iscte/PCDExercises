@@ -79,12 +79,12 @@ Dica: Para alterar a posição da janela deve usar-se o método setLocation(int 
 
 
 
-            ImageIcon icon = new ImageIcon("C:\\Users\\wrt0823\\Desktop\\PCDExercises\\Exercises\\src\\Exercise1\\imagens\\timor1.jpg");
+            ImageIcon icon = new ImageIcon("Exercises/Images/timor1.jpg");
             JLabel label= new JLabel();
             label.setIcon(icon);
             frame.add(label, BorderLayout.CENTER);
 
-            String path = "Exercise1/imagens/timor1.jpg";
+            String path = "Images/timor1.jpg";
 
             File[] files = new File(path).listFiles(new FileFilter() {
                 public boolean accept(File f) {
