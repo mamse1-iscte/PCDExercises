@@ -1,4 +1,4 @@
-package Exercise2.Part2;
+package Week2.Exercise2;
 
 
 

@@ -1,7 +1,5 @@
-package Exercise2.Part4;
+package Week2.Exercise4;
 
-
-import Exercise2.Part2.HorseRace;
 
 import javax.swing.*;
 import java.awt.*;

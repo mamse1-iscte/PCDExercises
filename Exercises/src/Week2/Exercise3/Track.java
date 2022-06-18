@@ -1,6 +1,4 @@
-package Exercise2.Part3;
-
-import Exercise2.Part3.Car;
+package Week2.Exercise3;
 
 import java.awt.Graphics;
 import java.util.Observable;
