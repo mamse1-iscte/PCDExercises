@@ -1,6 +1,7 @@
-package Exercise1;
+package Exercise1.Part1;
 
-import java.awt.*;
+
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -35,27 +36,19 @@ Dica: Para alterar a posição da janela deve usar-se o método setLocation(int 
  */
 
 
-public class MyFrame {
+public class FrameTest {
     private JFrame frame;
 
-    public MyFrame(String title, int xValue,int yValue) {
-        frame = new JFrame(title);
+    public FrameTest() {
+        frame = new JFrame("Hello");
 
         // para que o botao de fechar a janela termine a aplicacao
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        frame.setTitle(title);
-        frame.setSize(xValue,yValue);
-
-
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-
-        frame.setLocation( dimension.width/3, dimension.height/3);
-
-        addFrameContent( title,  xValue, yValue);
+        addFrameContent();
 
         // para que a janela se redimensione de forma a ter todo o seu conteudo visivel
-       // frame.pack();
+        frame.pack();
     }
 
     public void open() {
@@ -63,77 +56,37 @@ public class MyFrame {
         frame.setVisible(true);
     }
 
-    private void addFrameContent(String title, int xValue,int yValue) {
+    private void addFrameContent() {
+
 
 		/* para organizar o conteudo em grelha (linhas x colunas)
 		se um dos valores for zero, o numero de linhas ou colunas (respetivamente) fica indefinido,
 		e estas sao acrescentadas automaticamente */
-        frame.setLayout(new GridLayout(4,2));
+        frame.setLayout(new GridLayout(2,2));
 
+        JLabel label = new JLabel("label");
+        frame.add(label);
 
-        JLabel titleL = new JLabel("title");
-        frame.add(titleL);
-
-        JTextField titleT = new JTextField(title);
-        frame.add(titleT);
-
-
-
-
-        JLabel widthL = new JLabel("width");
-        frame.add(widthL);
-
-        JTextField widthT = new JTextField(Integer.toString(xValue));
-        frame.add(widthT);
-
-
-
-        JLabel heightL = new JLabel("height");
-        frame.add(heightL);
-
-        JTextField heightT = new JTextField(Integer.toString(yValue));
-        frame.add(heightT);
-
-
+        JTextField text = new JTextField("text");
+        frame.add(text);
 
         JCheckBox check = new JCheckBox("check");
         frame.add(check);
 
-        JButton button = new JButton("Update");
+        JButton button = new JButton("button");
         button.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, check.isSelected() ? "checked" : "not checked");
 
-
-
-                String title = titleT.getText();
-                String width = widthT.getText();
-                String height = heightT.getText();
-
-
-                frame.setTitle(title);
-                frame.setSize( Integer.parseInt(width), Integer.parseInt(height));
-
-
-
-
-
-
-
-
-
             }
         });
         frame.add(button);
-
-
-
     }
 
     public static void main(String[] args) {
-        MyFrame window = new MyFrame("Hello",250, 200);
+        FrameTest window = new FrameTest();
         window.open();
     }
 }

@@ -1,4 +1,4 @@
-package Exercise2;
+package Exercise2.Part1;
 
 
 

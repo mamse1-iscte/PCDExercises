@@ -1,4 +1,4 @@
-package Exercise1;
+package Exercise1.Part3;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
