@@ -47,7 +47,6 @@ public class Fila {
             throw new IllegalStateException();
         }
 
-
         int item=array[size];
         array[size]= 0;
         size--;
