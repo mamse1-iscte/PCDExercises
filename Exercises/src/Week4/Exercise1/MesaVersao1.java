@@ -1,4 +1,4 @@
-package Week4;
+package Week4.Exercise1;
 
 
 import java.util.ArrayList;
@@ -45,6 +45,15 @@ public class MesaVersao1 {
         //cozinheiro2.start();
         glutao.start();
 
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        glutao2.interrupt();
+        cozinheiro.interrupt();
+        glutao.interrupt();
 
     }
 
