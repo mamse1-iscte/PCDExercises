@@ -1,4 +1,4 @@
-package Week6;
+package Week6.Exercise1;
 
 import java.util.concurrent.CyclicBarrier;
 
@@ -24,7 +24,7 @@ public class MainBarreira {
 					}
 				System.out.println("Search DONE. Found:"+count+" Time:"+
 					(System.currentTimeMillis()-initTime));
-				
+
 			}
 		});
 		RandomString rs=new RandomString(STRING_LENGTH);
