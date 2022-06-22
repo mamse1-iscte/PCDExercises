@@ -1,11 +1,18 @@
 package Week5.Exercise2;
 
 import javax.swing.*;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Balanca {
+
+    private Lock lock =new ReentrantLock();
+    private Condition lingote = lock.newCondition();
+
     private double pesoTotalOuro = 0;
     private JTextField texto;
-    private final double MAX = 12.5;
+    public static final double MAX = 12.5;
 
     public Balanca(JTextField texto) {
         this.texto = texto;
@@ -33,30 +40,41 @@ public class Balanca {
     }
 
 
-    public synchronized void escavar() {
+    public  void escavar() {
+        try {
+
+        lock.lock();
         double kgOuroRecolhido = Math.random();
         adicionarPesoOuro(kgOuroRecolhido);
         System.out.println("KG recolhidos " + kgOuroRecolhido);
         System.out.println("Na balanca está " + getPesoTotalOuro());
-        notifyAll();
 
+        if(getPesoTotalOuro()>12.5) {
+            lingote.signalAll();
+        }
+    }            finally {
+            lock.unlock ();
+        }
     }
 
 
-    public synchronized void criarLingote() {
+    public  void criarLingote() {
 
 
             if (getPesoTotalOuro() < MAX) {
                 try {
-                    wait();
+                    lock.lock();
+                    lingote.await();
                 } catch (InterruptedException e) {
                     System.out.println("parou ourives!");
                     return;
                 }
+                finally {
+                    lock.unlock ();
+                }
             } else {
                 adicionarPesoOuro(-12.5);
                 System.out.println("lingote criado!");
-                notifyAll();
             }
     }
 

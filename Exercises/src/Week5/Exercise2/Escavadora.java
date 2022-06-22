@@ -3,7 +3,7 @@ package Week5.Exercise2;
 public class Escavadora extends Thread {
     private double kgOuroRecolhido = 0;
     private Balanca balanca;
-    private final double MAX = 12.5;
+    public static final double MAX = 12.5;
 
 
     public Escavadora(Balanca balanca) {

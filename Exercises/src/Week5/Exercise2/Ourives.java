@@ -2,7 +2,6 @@ package Week5.Exercise2;
 
 public class Ourives extends Thread {
     private Balanca balanca;
-    private final double MAX = 12.5;
 
     public Ourives(Balanca balanca) {
         this.balanca = balanca;
