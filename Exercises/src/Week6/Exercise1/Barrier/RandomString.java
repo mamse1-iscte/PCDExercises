@@ -1,4 +1,4 @@
-package Week6.Exercise1;
+package Week6.Exercise1.Barrier;
 
 import java.security.SecureRandom;
 import java.util.Locale;

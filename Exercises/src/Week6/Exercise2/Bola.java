@@ -3,6 +3,10 @@ package Week6.Exercise2;
 import java.awt.Color;
 import java.util.Observable;
 
+//incremento aleatorio 0.01 a 0.1
+//sleep 100ms
+// Bola.bolaAtingiuLimite para o fim
+//setChanged e notifyObservers
 public class Bola extends Observable implements DrawableBall, Runnable {
 	private float estado=0;
 	private Color color=new Color((int)(Math.random()*256), 
@@ -12,7 +16,20 @@ public class Bola extends Observable implements DrawableBall, Runnable {
 	@Override
 	public void run() {
 		// TODO
-	}
+		while(true){
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			this.estado=estado+(float)0.01;
+		this.setChanged();
+		this.notifyObservers();
+		if(bolaAtingiuLimite()){
+				System.out.println("ya");
+
+			}
+	}}
 
 	public boolean bolaAtingiuLimite(){
 		return estado>=1;

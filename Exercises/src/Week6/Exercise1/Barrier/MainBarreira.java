@@ -1,8 +1,18 @@
-package Week6.Exercise1;
+package Week6.Exercise1.Barrier;
 
 import java.util.concurrent.CyclicBarrier;
 
 
+/*
+
+Adapte a solução para a procura distribuída de texto abordada na teórica (em anexo) para usar um CountDownLatch em vez de uma Barreira.
+Relembrando: pretende-se procurar um pequeno texto em N documentos, sendo a procura em cada documento feita por uma thread dedicada.
+Para coordenar a contagem dos resultados, é usada uma barreira. Esta utilização da Barreira pode, porém, e com vantagem, ser substituída por um CountDownLatch.
+Compare o desempenho e o tempo de terminação das threads entre as duas versões.
+No código anexado, cada documento é simplesmente uma sequência aleatória de carateres, e a palavra a procurar está definida numa constante.
+O número de documentos a considerar também está definido numa constante.
+
+*/
 
 
 public class MainBarreira {

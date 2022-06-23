@@ -1,4 +1,4 @@
-package Week6.Exercise1;
+package Week6.Exercise1.Barrier;
 
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
