@@ -17,8 +17,9 @@ public class Bola extends Observable implements DrawableBall, Runnable {
 	public void run() {
 		// TODO
 		while(true){
+			double random =  ( Math.random() * 4 + 1);
 			try {
-				Thread.sleep(100);
+				Thread.sleep((long) random*50);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -26,8 +27,8 @@ public class Bola extends Observable implements DrawableBall, Runnable {
 		this.setChanged();
 		this.notifyObservers();
 		if(bolaAtingiuLimite()){
-				System.out.println("ya");
-
+			estado=1;
+				return;
 			}
 	}}
 
