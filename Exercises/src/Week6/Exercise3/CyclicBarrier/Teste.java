@@ -1,6 +1,8 @@
 package Week6.Exercise3.CyclicBarrier;
 
 
+
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
 /*
@@ -12,21 +14,25 @@ Utilize a  barreira da biblioteca padrão do Java (CyclicBarrier) na sua impleme
 
 */
 public class Teste {
+    public final static int MAX=10;
+    public static  Mythread[] threads=new Mythread[MAX];
 
 
 
 
-public static void main(String[] args) {
+
+    public static void main(String[] args) throws BrokenBarrierException, InterruptedException {
 Teste teste= new Teste();
 
-  CyclicBarrier barrier = new CyclicBarrier ( 5 , new Runnable () {
+  CyclicBarrier barrier = new CyclicBarrier ( MAX , new Runnable () {
                 public void run () {
-
+                    System.out.println("oi");
+                    //posso ver o conteudo de todas as threads agr
  }
             });
-  for (int i=0;i<5;i++){
-      teste.new Mythread(i,barrier).start();
-
+  for (int i=0;i<MAX;i++){
+      threads[i]=teste.new Mythread(i,barrier);
+      threads[i].start();
   }
 }
     public class Mythread extends Thread{
@@ -38,6 +44,15 @@ Teste teste= new Teste();
             this.barrier=barrier;
         }
 
-
+        @Override
+        public void run() {
+            System.out.println("o meu id "+id);
+            try {
+                sleep(100);
+                barrier.await();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

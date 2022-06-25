@@ -1,4 +1,4 @@
-package Week8.Part1;
+package Week8.Exercise1.Part1;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

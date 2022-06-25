@@ -1,4 +1,4 @@
-package Week8.Part2;
+package Week8.Exercise1.Part2;
 
 import java.io.*;
 import java.net.ServerSocket;

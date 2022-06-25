@@ -1,16 +1,23 @@
-package Week8.Part2;
+package Week8.Exercise1.Part1;
 
-import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
 
-public class Client {
+//esta classe funciona mas tem limitações se quiser ligar mais do que um cliente espera que o cliente 1 acabe para começar o cliente2
+public class SimpleClient {
 	private BufferedReader in;
 	private PrintWriter out;
 	private Socket socket;
 	public static void main(String[] args) {
-		new Client().runClient();
+		new SimpleClient().runClient();
 	}
 
 	public void runClient() {
@@ -29,7 +36,7 @@ public class Client {
 	void connectToServer() throws IOException {
 		InetAddress endereco = InetAddress.getByName(null);
 		System.out.println("Endereco:" + endereco);
-		socket = new Socket(endereco, Server.PORTO);
+		socket = new Socket(endereco, SimpleServer.PORTO);
 		System.out.println("Socket:" + socket);
 		in = new BufferedReader(new InputStreamReader(
 				socket.getInputStream()));
