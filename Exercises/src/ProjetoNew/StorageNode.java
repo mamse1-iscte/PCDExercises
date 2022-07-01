@@ -1,23 +1,25 @@
 package ProjetoNew;
 
-import ProjetoOld.ByteBlockRequest;
-import Week8.Exercise1.Part2.Server;
 
 import java.io.*;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.nio.file.Files;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+//java -jar diretorio.jar 8080
 
 //devem enviar mensagem  INSC <ENDEREÇO> <PORTO>. para o diretorio funcionam como clientes
 public class StorageNode {
-    private CountDownLatch cdl= new CountDownLatch(2);
+    public static  CountDownLatch cdl= new CountDownLatch(2);
     public static final int PORTO = 8080;
-    CloudByte[] contentCloudBytes;
+    public static CloudByte[] contentCloudBytes;
+    public int countBlock=0;
+    public static final int LENGTH = 100;
+
+    private List<ByteBlockRequest> blockList = new ArrayList<>();
+
 
     private String diretorio;
     private int portoEscuta;
@@ -38,7 +40,6 @@ public class StorageNode {
        contentCloudBytes= new CloudByte[fileBytes.length];
         for (int i=0;i<fileBytes.length;i++){
             contentCloudBytes[i]= new CloudByte(fileBytes[i]);
-            System.out.println(fileBytes[i]);
             }
     }
 
@@ -49,6 +50,19 @@ public class StorageNode {
         this.portoNoEscuta=portoNoEscuta;
     }
 
+    public void connectToServer() {
+        try {
+            InetAddress endereco = InetAddress.getByName(null);
+            Socket socket = new Socket(endereco, 8080);
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+            System.out.println("foi feita a conexao no porto "+ PORTO+ " e endereco: "+endereco);
+
+
+        } catch (IOException e) {
+            System.out.println("servidor nao encontrado");
+        }
+    }
 
 
         private class DealWithClient extends Thread {
@@ -98,14 +112,113 @@ public class StorageNode {
 
 
 
-        public static void main(String[] args) throws IOException {
-           // try {
-                new StorageNode(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]), args[3]);
+
+    public void correcaoDeValues() {
+
+    }
+
+    private static  class DealWithInput extends Thread {
+        private BufferedReader in;
+
+
+        // tem de ir a todos os storageNodes ver se algum tem parity not ok
+        //se algum tiver parity not ok ver nos outros nos se 2 têm parity ok e substituir
+        @Override
+        public void run() {
+            try {
+                serve();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void serve() throws IOException {
+           while (true){
+               in= new BufferedReader(new InputStreamReader(System.in));
+               String comando=in.readLine().toUpperCase();
+               if(comando.contains("ERROR")){
+                   String[] partes=comando.split(" " );
+                   int erro=Integer.parseInt(partes[1]);
+                   if(contentCloudBytes[erro].isParityOk()){
+                       contentCloudBytes[erro].makeByteCorrupt();
+                       System.out.println("byte "+erro+ " tornou se corrupto");
+                   }
+                   else
+                   {
+                       System.out.println("Byte ja era corrupto");
+                   }
+
+
+               }
+               else{
+                   System.out.println("Comando nao é valido");
+               }
+
+           }
+        }
+    }
+
+   public static class Corretores extends Thread {
+        private CountDownLatch cdl;
+        private int id;
+
+        public Corretores(int id,CountDownLatch cdl){
+            this.id=id;
+            this.cdl=cdl;
+        }
+
+        // tem de ir a todos os storageNodes ver se algum tem parity not ok
+        //se algum tiver parity not ok ver nos outros nos se 2 têm parity ok e substituir
+        @Override
+        public void run() {
+            while (true) {
+                for (int i = 0; i < contentCloudBytes.length; i++) {
+                    if (!contentCloudBytes[i].isParityOk()) {
+                        System.out.println("foi encontrado um erro no byte " + i);
+
+                    }
+                    try {
+                        sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+
+    //ao criar um novo storagenode a informação tem de ser copiada, inicialmente em blocos de  1 00 000  /100 = 100 000 pedidos para descarregar
+    //as threads têm de contar os pedidos e ir metendo
+
+
+    public  void CreateByteBlockList(){
+        for (int i=0;i<1000000;i+=LENGTH) {
+            blockList.add(new ByteBlockRequest(i, LENGTH));
+        }
+    }
+    public synchronized CloudByte[] BlockOfCloudBytes(){
+        CloudByte[] block= new CloudByte[LENGTH];
+        for(int i=0;i<LENGTH;i++){
+            block[i]=contentCloudBytes[countBlock];
+        }
+        countBlock+=1;
+        return block;
+    }
+
+
+    public static void main(String[] args) throws IOException {
+        // try {
+        new StorageNode(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]), args[3]).connectToServer();
                 /*new StorageNode(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]), args[3]).startServing();}
       		catch(java.lang.ArrayIndexOutOfBoundsException e){
                     new ProjetoOld.StorageNode(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2])).run();
                 }*/
-        }
+        new DealWithInput().start();
+        new Corretores(1,cdl).start();
+
+    }
+
 
         /*
         public void startServing() throws IOException {
@@ -123,52 +236,4 @@ public class StorageNode {
         }
 
 */
-
-    public synchronized CloudByte[] getBlocks(ByteBlockRequest req) {
-        return Arrays.copyOfRange(contentCloudBytes,req.startIndex,req.startIndex+req.length);
-    }
-
-    public void correcaoDeValues() {
-
-    }
-
-    public  class DealWithInput extends Thread {
-        private BufferedReader in;
-
-
-        // tem de ir a todos os storageNodes ver se algum tem parity not ok
-        //se algum tiver parity not ok ver nos outros nos se 2 têm parity ok e substituir
-        @Override
-        public void run() {
-            serve();
-        }
-
-        public void serve() {
-           while (true){
-               in= new BufferedReader(new InputStreamReader(System.in));
-               if(in.toString().equals("ERROR")){
-                   //if()
-
-               }
-
-           }
-        }
-    }
-
-    public  class Corretores extends Thread {
-        private CountDownLatch cdl;
-        private int id;
-
-        public Corretores(int id,CountDownLatch cdl){
-            this.id=id;
-            this.cdl=cdl;
-        }
-
-        // tem de ir a todos os storageNodes ver se algum tem parity not ok
-        //se algum tiver parity not ok ver nos outros nos se 2 têm parity ok e substituir
-        @Override
-        public void run() {
-
-        }
-    }
 }

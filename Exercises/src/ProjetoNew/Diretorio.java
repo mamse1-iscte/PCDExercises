@@ -35,6 +35,7 @@ public class Diretorio {
         private void serve() throws IOException {
             while (true) {
                 String str = in.readLine();
+                System.out.println("oi");
                 nodeList.add(str);
                 if (str.equals("nodes"))
                 nodeList.forEach(System.out::println);
